@@ -1,0 +1,90 @@
+// Prisma schema — expense tracker
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  clerkUserId String   @unique
+  email       String   @unique
+  name        String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transactions Transaction[]
+  categories   Category[]
+  wallets      Wallet[]
+}
+
+model Category {
+  id     String @id @default(uuid())
+  name   String
+  icon   String @default("tag")
+  // "income" | "expense"
+  type   String @default("expense")
+  userId String
+  user   User   @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  // A user cannot have two categories with the same name and type
+  @@unique([userId, name, type])
+  @@index([userId])
+}
+
+model Wallet {
+  id      String @id @default(uuid())
+  name    String
+  // "cash" | "bank" | "card"
+  type    String @default("cash")
+  balance Float  @default(0)
+  userId  String
+  user    User   @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Transaction {
+  id     String  @id @default(uuid())
+  text   String
+  // Always stored POSITIVE. `type` decides the sign.
+  amount Float
+  note   String?
+  // "income" | "expense"
+  type   String  @default("expense")
+  // User-chosen date, distinct from createdAt (the audit timestamp)
+  date   DateTime @default(now())
+  // How the money moved: "cash" | "online". A separate axis from `type` —
+  // income and expenses can each be either. The default lets `db push`
+  // backfill existing rows instead of failing on a required column.
+  paymentMethod String @default("cash")
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  walletId String?
+  wallet   Wallet?  @relation(fields: [walletId], references: [id], onDelete: SetNull)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [clerkUserId], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userId])
+  @@index([userId, date])
+  @@index([userId, type])
+  @@index([userId, paymentMethod])
+  @@index([categoryId])
+  @@index([walletId])
+}

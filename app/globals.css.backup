@@ -1,0 +1,569 @@
+/* Tailwind, WITHOUT preflight.
+   The 21st.dev / Layro chart kit needs Tailwind utilities and the shadcn
+   tokens below. Preflight is deliberately left out: it would reset the
+   hand-written CSS further down and silently restyle the whole app. */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+/* data-[state=open]:animate-in, fade-in-0, slide-in-from-left, ... */
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* shadcn/ui tokens. The chart kit reads these — including --chart-1..5,
+   which is what "follows your chart colours" in its description means. */
+:root {
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.17 0.012 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.17 0.012 265);
+  --muted: oklch(0.967 0.004 255);
+  --muted-foreground: oklch(0.52 0.015 260);
+  --accent: oklch(0.955 0.012 255);
+  --accent-foreground: oklch(0.24 0.014 265);
+  --border: oklch(0.92 0.006 258);
+
+  --chart-1: oklch(0.58 0.17 258);
+  --chart-2: oklch(0.66 0.13 178);
+  --chart-3: oklch(0.72 0.15 72);
+  --chart-4: oklch(0.56 0.19 318);
+  --chart-5: oklch(0.64 0.18 28);
+
+  /* Added for the shadcn dashboard components. */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.17 0.012 265);
+  --primary: oklch(0.55 0.17 258);
+  --primary-foreground: oklch(0.99 0.004 250);
+  --secondary: oklch(0.967 0.004 255);
+  --secondary-foreground: oklch(0.24 0.014 265);
+  --destructive: oklch(0.58 0.21 22);
+  --destructive-foreground: oklch(0.99 0.004 250);
+  --input: oklch(0.92 0.006 258);
+  --ring: oklch(0.55 0.17 258);
+
+  --sidebar: oklch(0.985 0.003 255);
+  --sidebar-foreground: oklch(0.17 0.012 265);
+  --sidebar-primary: oklch(0.55 0.17 258);
+  --sidebar-primary-foreground: oklch(0.99 0.004 250);
+  --sidebar-accent: oklch(0.945 0.012 255);
+  --sidebar-accent-foreground: oklch(0.24 0.014 265);
+  --sidebar-border: oklch(0.92 0.006 258);
+  --sidebar-ring: oklch(0.55 0.17 258);
+
+  /* Money semantics: income reads green, expense red, in both themes. */
+  --positive: oklch(0.54 0.14 162);
+  --positive-muted: oklch(0.95 0.04 162);
+  --negative: oklch(0.55 0.2 22);
+  --negative-muted: oklch(0.96 0.03 22);
+}
+
+@theme inline {
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-positive: var(--positive);
+  --color-positive-muted: var(--positive-muted);
+  --color-negative: var(--negative);
+  --color-negative-muted: var(--negative-muted);
+}
+
+:root {
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+.container {
+  margin: 30px auto;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar {
+  background: #000;
+  color: #fff;
+}
+
+.navbar a {
+  color: #fff;
+}
+
+.navbar button,
+.guest button {
+  border: 0;
+  border-radius: 5px;
+  background: rebeccapurple;
+  color: #fff;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+}
+
+.navbar button:hover {
+  opacity: 0.9;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.navbar .cl-button {
+  background: transparent;
+  border: 0;
+}
+
+h1 {
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+h3 {
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 10px;
+  margin: 40px 0 10px;
+}
+
+h4 {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.guest {
+  text-align: center;
+}
+
+.error {
+  background: red;
+  color: #fff;
+  padding: 3px;
+}
+
+.inc-exp-container {
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.inc-exp-container > div {
+  flex: 1;
+  text-align: center;
+}
+
+.inc-exp-container > div:first-of-type {
+  border-right: 1px solid #dedede;
+}
+
+.money {
+  font-size: 20px;
+  letter-spacing: 1px;
+  margin: 5px 0;
+}
+
+.money.plus {
+  color: #2ecc71;
+}
+
+.money.minus {
+  color: #c0392b;
+}
+
+label {
+  display: inline-block;
+  margin: 10px 0;
+}
+
+input[type='text'],
+input[type='number'] {
+  border: 1px solid #dedede;
+  border-radius: 2px;
+  display: block;
+  font-size: 16px;
+  padding: 10px;
+  width: 100%;
+}
+
+.btn {
+  cursor: pointer;
+  background-color: #9c88ff;
+  box-shadow: var(--box-shadow);
+  color: #fff;
+  border: 0;
+  display: block;
+  font-size: 16px;
+  margin: 10px 0 30px;
+  padding: 10px;
+  width: 100%;
+}
+
+.btn:focus,
+.delete-btn:focus {
+  outline: 0;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 40px;
+}
+
+.list li {
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.list li.plus {
+  border-right: 5px solid #2ecc71;
+}
+
+.list li.minus {
+  border-right: 5px solid #c0392b;
+}
+
+.delete-btn {
+  cursor: pointer;
+  background-color: #e74c3c;
+  border: 0;
+  color: #fff;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 2px 5px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(-100%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.list li:hover .delete-btn {
+  opacity: 1;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Dark mode. Same layout and sizing as above, different palette, so    */
+/* the toggle in the header changes colours and nothing else.           */
+/* ------------------------------------------------------------------ */
+
+.dark {
+  --card: oklch(0.215 0.016 265);
+  --card-foreground: oklch(0.975 0.003 255);
+  --popover: oklch(0.215 0.016 265);
+  --popover-foreground: oklch(0.975 0.003 255);
+  --muted: oklch(0.28 0.018 265);
+  --muted-foreground: oklch(0.72 0.014 258);
+  --accent: oklch(0.31 0.02 265);
+  --accent-foreground: oklch(0.975 0.003 255);
+  --border: oklch(1 0 0 / 11%);
+
+  --chart-1: oklch(0.69 0.15 258);
+  --chart-2: oklch(0.74 0.12 178);
+  --chart-3: oklch(0.79 0.14 74);
+  --chart-4: oklch(0.68 0.17 318);
+  --chart-5: oklch(0.72 0.16 28);
+
+  --background: oklch(0.165 0.014 265);
+  --foreground: oklch(0.975 0.003 255);
+  --primary: oklch(0.7 0.14 256);
+  --primary-foreground: oklch(0.19 0.02 265);
+  --secondary: oklch(0.28 0.018 265);
+  --secondary-foreground: oklch(0.975 0.003 255);
+  --destructive: oklch(0.68 0.19 24);
+  --destructive-foreground: oklch(0.985 0.003 255);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.7 0.14 256);
+
+  --sidebar: oklch(0.195 0.016 265);
+  --sidebar-foreground: oklch(0.975 0.003 255);
+  --sidebar-primary: oklch(0.7 0.14 256);
+  --sidebar-primary-foreground: oklch(0.19 0.02 265);
+  --sidebar-accent: oklch(0.3 0.02 265);
+  --sidebar-accent-foreground: oklch(0.975 0.003 255);
+  --sidebar-border: oklch(1 0 0 / 11%);
+  --sidebar-ring: oklch(0.7 0.14 256);
+
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  --positive: oklch(0.75 0.15 162);
+  --positive-muted: oklch(0.3 0.06 162);
+  --negative: oklch(0.72 0.18 22);
+  --negative-muted: oklch(0.31 0.07 22);
+}
+
+.dark body {
+  background-color: #131620;
+  color: #e9eaee;
+}
+
+.dark .navbar {
+  background: #0b0d14;
+}
+
+.dark h3 {
+  border-bottom-color: #343a4d;
+}
+
+.dark .inc-exp-container,
+.dark .list li {
+  background-color: #1b1f2b;
+  color: #e9eaee;
+}
+
+.dark .inc-exp-container > div:first-of-type {
+  border-right-color: #343a4d;
+}
+
+.dark input[type='text'],
+.dark input[type='number'],
+.dark input[type='date'],
+.dark input[type='search'],
+.dark select {
+  background-color: #1b1f2b;
+  border-color: #343a4d;
+  color: #e9eaee;
+}
+
+.dark .empty,
+.dark .pagination-info,
+.dark .transaction-meta,
+.dark .transaction-note {
+  color: #a0a6b8;
+}
+
+/* ------------------------------------------------------------------ */
+/* Light/dark toggle in the header.                                     */
+/* A dedicated class rather than `.navbar button`, which is the purple   */
+/* pill used for the sign-in button.                                    */
+/* ------------------------------------------------------------------ */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid #9c88ff;
+  outline-offset: 2px;
+}
+
+/* Keeps the header row from collapsing now that it holds two controls. */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Unstyled-markup hooks from the filter/pagination work, given just
+   enough layout to be usable. No redesign. */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 10px 0 20px;
+}
+
+.filters input,
+.filters select {
+  width: auto;
+  display: inline-block;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 40px;
+}
+
+.pagination button {
+  cursor: pointer;
+}
+
+.transaction-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.transaction-meta,
+.transaction-note {
+  font-size: 12px;
+  color: #777;
+}
+
+.transaction-amount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.empty,
+.pagination-info {
+  color: #777;
+  font-size: 14px;
+}
+
+.minus-text {
+  color: #c0392b;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dashboard built from the 21st.dev chart kit.                         */
+/* ------------------------------------------------------------------ */
+
+.dashboard {
+  /* The surrounding .container is a 350px column — fine for the form and
+     the list, far too narrow for charts. This widens only the dashboard
+     and leaves every other block at its original width. min() with 92vw
+     keeps it from causing horizontal scroll on a phone. */
+  width: min(92vw, 980px);
+  display: grid;
+  gap: 16px;
+  margin: 20px 0 30px;
+}
+
+.dashboard-kpis {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Scoped preflight for the shadcn dashboard routes.                    */
+/*                                                                      */
+/* Tailwind's preflight is deliberately NOT imported globally — it would */
+/* reset the hand-written CSS the rest of the app depends on. These are  */
+/* the few preflight rules the shadcn components actually need, scoped   */
+/* to the dashboard shell and to Radix portals (the mobile sidebar       */
+/* renders into document.body, outside .app-shell).                      */
+/*                                                                      */
+/* They live in @layer base, so every Tailwind utility beats them no     */
+/* matter how the selectors compare — bg-primary always wins over the    */
+/* transparent button background below.                                  */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  .app-shell,
+  [role='dialog'] {
+    /* Tailwind's `border` sets width only; preflight normally supplies the
+       style. Without this every bordered card renders borderless. */
+    *,
+    ::before,
+    ::after {
+      border-width: 0;
+      border-style: solid;
+      border-color: var(--border);
+    }
+
+    :where(button) {
+      background-color: transparent;
+      background-image: none;
+      cursor: pointer;
+    }
+
+    :where(button, input, select, textarea) {
+      font: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+      margin: 0;
+      padding: 0;
+    }
+
+    :where(h1, h2, h3, h4, p, ol, ul, figure) {
+      margin: 0;
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    :where(ol, ul) {
+      list-style: none;
+      padding: 0;
+    }
+
+    :where(svg) {
+      display: block;
+    }
+  }
+
+  /* The dashboard owns its full viewport; the 350px .container column that
+     wraps the rest of the app would otherwise squeeze it. */
+  .app-shell {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
