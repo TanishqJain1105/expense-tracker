@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  LayoutTemplate,
   Settings,
   Wallet,
 } from "lucide-react";
@@ -27,7 +26,6 @@ import { app1User } from "@/components/ui/app-1-utils/app-1-data";
 
 const NAV = [
   { title: "Overview", href: "/", icon: LayoutDashboard },
-  { title: "Theme demo", href: "/app1", icon: LayoutTemplate },
 ];
 
 export function App1Sidebar() {
