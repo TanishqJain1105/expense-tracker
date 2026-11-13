@@ -43,8 +43,21 @@ export const checkUser = async () => {
   });
 
   if (loggedInUser) {
-    // Covers users who existed before categories and wallets were added.
-    await seedDefaults(user.id);
+    // Existing users are already seeded, so skip the two writes on every
+    // dashboard load. Still covers users who predate the Category and Wallet
+    // models: if either table is empty for them, seed it now.
+    const [category, wallet] = await Promise.all([
+      db.category.findFirst({
+        where: { userId: user.id },
+        select: { id: true },
+      }),
+      db.wallet.findFirst({ where: { userId: user.id }, select: { id: true } }),
+    ]);
+
+    if (!category || !wallet) {
+      await seedDefaults(user.id);
+    }
+
     return loggedInUser;
   }
 

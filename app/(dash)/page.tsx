@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
+import { checkUser } from '@/lib/checkUser';
 import ExpenseDashboard from '@/components/ExpenseDashboard';
 import AddTransaction from '@/components/AddTransaction';
 import TransactionFilters from '@/components/TransactionFilters';
@@ -42,6 +43,12 @@ const HomePage = async ({
       </div>
     );
   }
+
+  // Creates the User row (and seeds default categories/wallets) on first
+  // visit. Must run after the signed-out early return, since checkUser()
+  // needs a signed-in Clerk user. Without it, every transaction insert fails
+  // on the Transaction.userId foreign key.
+  await checkUser();
 
   const filters = parseFilters(searchParams);
 
